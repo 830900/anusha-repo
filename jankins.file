@@ -1,0 +1,39 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('clone scm') {
+            steps {
+                echo 'clonig mc-app project code'
+				git branch: 'main', url: 'https://github.com/Narenreddym/mindcircuit13.git'
+				
+            }
+        }
+    }
+}
+
+
+pipeline {
+    
+    stages {
+        stage('build artifact with ') {
+            steps {
+                echo 'build artifact with maven build tool'
+				sh 'mvn clean install'
+            }
+        }
+    }
+}
+
+
+pipeline {
+    
+    stages {
+        stage('deploy tomcat') {
+            steps {
+                echo 'deployingbartifact to tomcat web server'
+				deploy adapters: [tomcat9(credentialsId: 'tomcat', path: '', url: 'http://107.21.24.26:8091/')], contextPath: 'facebook-app', war: '/*.war'
+            }
+        }
+    }
+}
